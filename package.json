@@ -1,0 +1,26 @@
+{
+  "name": "github-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": "10.x"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mstruebing/github-generator.git"
+  },
+  "keywords": [],
+  "author": "Max Strübing <mxstrbng@gmail.com> (https://github.com/mstruebing)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mstruebing/github-generator/issues"
+  },
+  "homepage": "https://github.com/mstruebing/github-generator#readme",
+  "dependencies": {
+    "puppeteer": "^1.19.0"
+  }
+}
