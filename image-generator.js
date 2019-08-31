@@ -1,11 +1,9 @@
-const http = require('http');
 const fs = require('fs');
-const {parse} = require('url');
 const puppeteer = require('puppeteer');
 const Jimp = require('jimp');
 
 const hostname = process.env.HOSTNAME || '127.0.0.1';
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 const getFileName = username => `./${imageDir}/${username}.png`;
 const imageDir = 'images';
@@ -25,8 +23,8 @@ const makeScreenshot = async username => {
     await browser.close();
 
     return file;
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+      throw new Error(`MAKE_SCREENSHOT: ${err}`)
   }
 };
 
@@ -57,26 +55,12 @@ const writeUsername = async username => {
         .crop(0, 0, 739, 140)
         .writeAsync(fileName);
     }
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+      throw new Error(`WRITE_USERNAME: ${err}`)
   }
 };
 
-const server = http.createServer(async (req, res) => {
-  try {
-    const username = parse(req.url).query;
-    const file = await makeScreenshot(username);
-    await writeUsername(username);
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'image/png');
-
-    const readStream = fs.createReadStream(getFileName(username));
-    readStream.pipe(res);
-  } catch (e) {
-    console.errr(e);
-  }
-});
-
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+module.exports = {
+  makeScreenshot,
+  writeUsername,
+};
