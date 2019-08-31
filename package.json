@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "nodemon ./src/main.js",
+    "lint": "ec",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -27,6 +28,13 @@
     "puppeteer": "^1.19.0"
   },
   "devDependencies": {
+    "editorconfig-checker": "^3.0.2",
+    "husky": "^3.0.4",
     "nodemon": "^1.19.1"
+  },
+  "husky": {
+      "hooks": {
+          "pre-commit": "npm run lint"
+      }
   }
 }

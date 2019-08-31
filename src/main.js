@@ -27,6 +27,7 @@ const imageGenerator = createImageGenerator(imageGeneratorOptions);
 
 const server = http.createServer(async (req, res) => {
   try {
+    // TODO: Make this a post request
     const username = parse(req.url).query;
 
     await imageGenerator.makeScreenshot(username);
