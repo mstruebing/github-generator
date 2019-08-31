@@ -1,10 +1,10 @@
-const {promisify} = require('util');
-const axios = require('axios');
 const fs = require('fs');
+const { promisify } = require('util');
+const axios = require('axios');
 
 const readFileAsync = promisify(fs.readFile);
 
-const createImageUploader = ({token, url, imageDirectory}) => {
+const createImageUploader = ({ token, url, imageDirectory }) => {
   const getFileName = username => `./${imageDirectory}/${username}.png`;
 
   return {
@@ -15,8 +15,8 @@ const createImageUploader = ({token, url, imageDirectory}) => {
         const encodedFile = file.toString('base64');
 
         const data = {
-          file_name: username,
-          contents: encodedFile,
+          file_name: username, // eslint-disable-line camelcase
+          contents: encodedFile
         };
 
         const response = await axios({
@@ -24,18 +24,18 @@ const createImageUploader = ({token, url, imageDirectory}) => {
           url,
           data,
           headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         });
 
         return response;
-      } catch (err) {
-        throw new Error(`UPLOAD_IMAGE: ${err}`);
+      } catch (error) {
+        throw new Error(`UPLOAD_IMAGE: ${error}`);
       }
-    },
+    }
   };
 };
 
 module.exports = {
-  createImageUploader,
+  createImageUploader
 };

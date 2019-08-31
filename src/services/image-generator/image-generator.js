@@ -1,10 +1,13 @@
-const fs = require('fs');
 const puppeteer = require('puppeteer');
 const Jimp = require('jimp');
 
-const createImageGenerator = ({imageDirectory, cssSelector, url, viewport}) => {
+const createImageGenerator = ({
+  imageDirectory,
+  cssSelector,
+  url,
+  viewport
+}) => {
   const getFileName = username => `./${imageDirectory}/${username}.png`;
-  const imageDir = 'images';
 
   return {
     makeScreenshot: async username => {
@@ -14,16 +17,16 @@ const createImageGenerator = ({imageDirectory, cssSelector, url, viewport}) => {
         await page.setViewport(viewport);
         await page.goto(`${url}/${username}`);
 
-        const graphElement = await page.$('.calendar-graph');
+        const graphElement = await page.$(cssSelector);
         const file = await graphElement.screenshot({
-          path: `${getFileName(username)}`,
+          path: `${getFileName(username)}`
         });
 
         await browser.close();
 
         return file;
-      } catch (err) {
-        throw new Error(`MAKE_SCREENSHOT: ${err}`);
+      } catch (error) {
+        throw new Error(`MAKE_SCREENSHOT: ${error}`);
       }
     },
     writeUsername: async username => {
@@ -31,11 +34,9 @@ const createImageGenerator = ({imageDirectory, cssSelector, url, viewport}) => {
         const fileName = getFileName(username);
         let image = await Jimp.read(fileName);
         const font = await Jimp.loadFont(Jimp.FONT_SANS_16_BLACK);
+        const { width, height } = image.bitmap;
 
-        const width = image.bitmap.width;
-        const height = image.bitmap.height;
-
-        // activity overview off
+        // Activity overview off
         if (height === 132 && width === 894) {
           await image.crop(0, 0, 894, 200).writeAsync(fileName);
           image = await Jimp.read(fileName);
@@ -44,7 +45,7 @@ const createImageGenerator = ({imageDirectory, cssSelector, url, viewport}) => {
             .crop(0, 0, 880, 155)
             .writeAsync(fileName);
 
-          // activity overview on
+          // Activity overview on
         } else {
           await image.crop(0, 0, 739, 184).writeAsync(fileName);
           image = await Jimp.read(fileName);
@@ -53,13 +54,13 @@ const createImageGenerator = ({imageDirectory, cssSelector, url, viewport}) => {
             .crop(0, 0, 739, 140)
             .writeAsync(fileName);
         }
-      } catch (err) {
-        throw new Error(`WRITE_USERNAME: ${err}`);
+      } catch (error) {
+        throw new Error(`WRITE_USERNAME: ${error}`);
       }
-    },
+    }
   };
 };
 
 module.exports = {
-  createImageGenerator,
+  createImageGenerator
 };

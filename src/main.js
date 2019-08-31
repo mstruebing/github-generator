@@ -1,15 +1,12 @@
 const http = require('http');
-const {parse} = require('url');
-
-const {createImageGenerator, createImageUploader} = require('./services');
 
 const env = require('../.env');
-const PRINTIFY_API_TOKEN = env.PRINTIFY_API_TOKEN;
+const { createImageGenerator, createImageUploader } = require('./services');
 
 const imageUploaderOptions = {
   token: env.PRINTIFY_API_TOKEN,
   url: `${env.baseUrl}/${env.imagePostPath}`,
-  imageDirectory: env.imageDirectory,
+  imageDirectory: env.imageDirectory
 };
 
 const imageGeneratorOptions = {
@@ -18,8 +15,8 @@ const imageGeneratorOptions = {
   url: 'https://github.com',
   viewport: {
     width: 1920,
-    height: 1080,
-  },
+    height: 1080
+  }
 };
 
 const imageUploder = createImageUploader(imageUploaderOptions);
@@ -28,17 +25,17 @@ const imageGenerator = createImageGenerator(imageGeneratorOptions);
 const server = http.createServer(async (req, res) => {
   try {
     // TODO: Make this a post request
-    const username = parse(req.url).query;
+    const username = req.url.substring(1);
 
     await imageGenerator.makeScreenshot(username);
     await imageGenerator.writeUsername(username);
     const response = await imageUploder.upload(username);
 
-    console.log('response: ', response);
-    console.log('response.data.id: ', response.data.id);
+    const image = response.data;
+    console.log('image:', image);
     res.end('finished');
-  } catch (err) {
-    console.error(`ERROR: ${err}`);
+  } catch (error) {
+    console.error(`ERROR: ${error}`);
   }
 });
 

@@ -8,8 +8,9 @@
   },
   "scripts": {
     "start": "nodemon ./src/main.js",
-    "lint": "ec",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "npm run lint-ec && npm run lint-xo",
+    "lint-ec": "ec",
+    "test": "xo"
   },
   "repository": {
     "type": "git",
@@ -29,12 +30,28 @@
   },
   "devDependencies": {
     "editorconfig-checker": "^3.0.2",
+    "eslint": "^6.3.0",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
     "husky": "^3.0.4",
-    "nodemon": "^1.19.1"
+    "lint-staged": "^9.2.5",
+    "nodemon": "^1.19.1",
+    "prettier": "^1.18.2"
   },
   "husky": {
-      "hooks": {
-          "pre-commit": "npm run lint"
-      }
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json}": [
+      "ec",
+      "prettier --write",
+      "git add"
+    ],
+    "*": [
+      "ec",
+      "git add"
+    ]
   }
 }
